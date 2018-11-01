@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">KanMusuViewer</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="menu_load_start2">Start2 読み込み</string>
+    <string name="error_load_start2">Start2 読み込みに失敗</string>
+    <string name="require_permission_to_load_start2">Start2 ファイルの読み込みにストレージアクセスの権限が必要です</string>
+    <string name="error_load_image">画像の読み込みに失敗しました</string>
+    <string name="menu_download_all_images">全てダウンロード</string>
+    <string name="search">Search</string>
+
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="net.cat_ears.kanmusuviewer.viewmodel.ShipListViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{vm.progressVisibility}" />
+
+        <com.airbnb.epoxy.EpoxyRecyclerView
+            android:id="@+id/shipList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:saveEnabled="true"
+            android:scrollbars="vertical"
+            app:layoutManager="	androidx.recyclerview.widget.LinearLayoutManager"
+            tools:context=".view.ShipListFragment"
+            tools:listitem="@layout/fragment_shiplist_item" />
+    </FrameLayout>
+</layout>
