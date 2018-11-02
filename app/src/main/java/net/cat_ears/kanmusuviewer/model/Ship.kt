@@ -9,7 +9,12 @@ data class Ship(
 ) {
     companion object {
         fun parse(ship: ApiMstShip, shipGraph: ApiMstShipgraph?): Ship {
-            return Ship(ship.apiId, ship.apiName, ship.apiYomi, shipGraph?.apiVersion?.first()?.toInt() ?: 0, shipGraph?.apiFilename)
+            return Ship(
+                    ship.apiId,
+                    ship.apiName,
+                    ship.apiYomi,
+                    shipGraph?.apiVersion?.first()?.toInt() ?: 0,
+                    shipGraph?.apiFilename)
         }
     }
 }

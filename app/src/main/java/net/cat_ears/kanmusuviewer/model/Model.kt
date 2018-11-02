@@ -20,7 +20,7 @@ class Model(filesDir: File?, cacheDir: File?) {
         if (cacheDir == null)
             throw FileNotFoundException("ExternalCacheDir Not Found.")
         start2Loader = Start2Loader(filesDir)
-        shipImageLoader = ShipImageLoader(cacheDir)
+        shipImageLoader = ShipImageLoader(ShipImageCacheRepository(cacheDir))
 
         isLoading.addSource(shipImageLoader.isDownloading) {
             isLoading.postValue(shipImageLoader.isDownloading.value)
@@ -57,12 +57,10 @@ class Model(filesDir: File?, cacheDir: File?) {
     }
 
     fun downloadAllImages() {
-        if (ships.value.isNullOrEmpty())
-            return
         if (isLoading.value == true)
             return
 
-        shipImageLoader.downloadAllImages(ships.value!!)
+        shipImageLoader.downloadAllImages(ships.value)
     }
 
     fun cancelDownload() {

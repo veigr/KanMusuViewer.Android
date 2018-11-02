@@ -31,41 +31,43 @@ class ShipListFragment : Fragment() {
     private val listVm: ShipListViewModel by sharedViewModel()
     private val shipVm: ShipViewModel by sharedViewModel()
     private val epoxyController: ShipEpoxyController = ShipEpoxyController()
-    private var isClosing: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        dataBind()
+
+        if (listVm.ships.value.isNullOrEmpty())
+            listVm.loadStart2FromLocal()
+    }
+
+    private fun dataBind() {
+        // こういうのって全部 DataBinding でできればいいのに……
+        listVm.ships.observe({ lifecycle }) { list ->
+            setDataToEpoxyController(list)
+        }
+        listVm.filterText.observe({ lifecycle }) {
+            setDataToEpoxyController(listVm.ships.value)
+        }
         listVm.errorMessageId.observe({ lifecycle }) {
             if (it != null) {
                 showAlert(context, it)
                 listVm.errorMessageId.postValue(null)
             }
         }
-
-        listVm.ships.observe({ lifecycle }) { list ->
-            setDataToEpoxyController(list)
-        }
-
-        listVm.filterText.observe({lifecycle}){
-            setDataToEpoxyController(listVm.ships.value)
-        }
-
-        if (listVm.ships.value.isNullOrEmpty())
-            listVm.loadStart2FromLocal()
     }
 
     private fun setDataToEpoxyController(list: List<Ship>?) {
-        epoxyController.setData(list?.filter{
+        epoxyController.setData(list?.filter {
             // フィルタとか本来変更通知コレクションの役割なんだけども……
             val filterText = listVm.filterText.value ?: ""
-            if(!filterText.isEmpty())
+            if (!filterText.isEmpty())
                 it.name.toLowerCase().contains(filterText.toLowerCase())
                         || it.kana.toLowerCase().contains(filterText.toLowerCase())
             else
                 true
         }) { id ->
-            isClosing = true
+            //isClosing = true
             shipVm.selectShip(id)
             requireFragmentManager().beginTransaction()
                     .addToBackStack(null)
@@ -76,8 +78,6 @@ class ShipListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        isClosing = false
-        setHasOptionsMenu(false)
         setHasOptionsMenu(true)
 
         val view = inflater.inflate(R.layout.fragment_shiplist, container, false)
@@ -97,18 +97,17 @@ class ShipListFragment : Fragment() {
         menu?.findItem(R.id.item_search)?.actionView?.let {
             it as SearchView
             it.setIconifiedByDefault(false)
-            if(listVm.filterText.value?.isEmpty() == false) {
+            if (listVm.filterText.value?.isEmpty() == false) {
                 it.setQuery(listVm.filterText.value, true)
             }
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    if(!isClosing)
-                        listVm.filter(newText)
+                    listVm.filter(newText)
                     return false
                 }
+
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    if(!isClosing)
-                        listVm.filter(query)
+                    listVm.filter(query)
                     return false
                 }
             })
@@ -177,13 +176,13 @@ class ShipListFragment : Fragment() {
                 if (context == null) return
                 GlobalScope.launch {
                     val text = context!!.contentResolver.openInputStream(data.data!!)?.bufferedReader()?.readText()
-                    if(text != null) listVm.loadAndSaveStart2(text)
+                    if (text != null) listVm.loadAndSaveStart2(text)
                 }
             }
         }
     }
 
-    private fun showDownloadingDialog()  {
+    private fun showDownloadingDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_downloading, null)
 
         val bind = DialogDownloadingBinding.bind(view)
