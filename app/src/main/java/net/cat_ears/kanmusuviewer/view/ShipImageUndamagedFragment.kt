@@ -19,7 +19,7 @@ class ShipImageUndamagedFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = FragmentShipImageUndamagedBinding.inflate(inflater, container, false)
         binding.vm = vm
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
         return binding.root
     }
 }

@@ -13,7 +13,10 @@ object ShipImageDownloader {
                 .httpGet()
                 .response()
                 .third
-        if (error != null) return null
+        if (error != null) {
+            Log.w("HTTP Error", error)
+            return null
+        }
         return bytes
     }
 
@@ -26,6 +29,8 @@ object ShipImageDownloader {
     }
 
     private fun createSuffix(r: Int, path: String): String {
+        
+        net.cat_ears.kanmusuviewer.R.xml.network_security_config
         val i = "ship_$path"
         val s = createKey(i)
         val a = if (i.isNotEmpty()) i.length else 1

@@ -187,7 +187,7 @@ class ShipListFragment : Fragment() {
 
         val bind = DialogDownloadingBinding.bind(view)
         bind.vm = listVm
-        bind.setLifecycleOwner(this)
+        bind.lifecycleOwner = this
 
         val dialog = AlertDialog.Builder(context)
                 .setTitle("Downloading")
