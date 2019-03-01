@@ -22,7 +22,10 @@ class ShipImageCacheRepository(private val cacheDir: File) : IShipImageCacheRepo
 class ShipImageCache(private val cacheFile: File) : IShipImageCache {
     override fun exists(): Boolean = cacheFile.exists()
 
-    override fun writeBytes(bytes: ByteArray) = cacheFile.writeBytes(bytes)
+    override fun writeBytes(bytes: ByteArray) {
+        if(!cacheFile.parentFile.exists()) cacheFile.parentFile.mkdir()
+        cacheFile.writeBytes(bytes)
+    }
 
     override fun readBytes(): ByteArray = cacheFile.readBytes()
 }
